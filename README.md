@@ -1,5 +1,5 @@
-Q-Wiki
-=======
+CL-Custom
+=========
 
 For the latest updates to this readme file, see: http://github.com/tekbasse/cl-custom
 
@@ -21,8 +21,8 @@ Copyright (c) 2013 Benjamin Brink
 po box 20, Marylhurst, OR 97036-0020 usa
 email: kappa@dekka.com
 
-Q-Wiki is open source and published under the GNU General Public License, consistent with the OpenACS system: http://www.gnu.org/licenses/gpl.html
-A local copy is available at q-wiki/www/doc/LICENSE.html
+CL-Custom is open source and published under the GNU General Public License, consistent with the OpenACS system: http://www.gnu.org/licenses/gpl.html
+A local copy is available at cl-custom/www/doc/LICENSE.html
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
