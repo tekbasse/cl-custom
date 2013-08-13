@@ -70,3 +70,8 @@ CREATE TABLE qwcl_color_chart (
 );
 
 CREATE INDEX qwcl_color_chart_ref_idx ON qwcl_color_chart (ref);
+
+-- example data
+insert into qwcl_color_chart (ref,name,color_hex,pretty_name,sort_id,trashed_p) values ('2f3338','Black','#2f3338','India Ink Black','1500','0');
+insert into qwcl_color_chart (ref,name,color_hex,pretty_name,sort_id,trashed_p) values ('80868d','Gray','#80868d','Shipping Gray','1600','0');
+insert into qwcl_color_chart (ref,name,color_hex,pretty_name,sort_id,trashed_p) values ('eff0ec','White','#eff0ec','Light White','1800','0');
