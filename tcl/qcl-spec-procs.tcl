@@ -171,18 +171,18 @@ ad_proc -public qwcl_select1_widget {
     if { $spec_value eq "" } {
         set spec_value $spec_default
     }
-    set spec_prev_value $spec_value
     set select1_list [list]
     set none_selected 1
     foreach option $spec_type_args_list {
-        set value_to_check $option
-        if { $value_to_check eq $spec_prev_value } {
+        if { $option eq $spec_value } {
             if { $none_selected } {
                 lappend select1_list [list "value" $option "label" $option "selected" 1]
                 set none_selected 0
             } else {
                 lappend select1_list [list "value" $option "label" $option]
             }
+        } else {
+                lappend select1_list [list "value" $option "label" $option]
         }
     }
     return $select1_list
