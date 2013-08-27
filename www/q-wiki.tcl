@@ -987,15 +987,16 @@ switch -exact -- $mode {
             #        qf_input type hidden value $page_id name page_id label ""
             qf_append html "<h3>Q-Wiki page edit</h3>"
             qf_append html "<div style=\"width: 70%; text-align: right;\">"
+            qf_append html "<p>Name is the page name. It's the last word in a url: http://mywebsite.com/name</p>"
             set page_name_unquoted [ad_unquotehtml $page_name]
-            qf_input type text value $page_name_unquoted name page_name label "Name:" size 40 maxlength 40
+            qf_input type text value $page_name_unquoted name page_name label "Page Name:" size 40 maxlength 40
             qf_append html "<br>"
             set page_title_unquoted [ad_unquotehtml $page_title]
-            qf_input type text value $page_title_unquoted name page_title label "Title:" size 40 maxlength 80
+            qf_input type text value $page_title_unquoted name page_title label "Page Title:" size 40 maxlength 80
             qf_append html "<br>"
             qf_append html "<p>Description is a short description about the page that is used by search engines and indexes.</p>"
             set description_unquoted [ad_unquotehtml $description]
-            qf_textarea value $description_unquoted cols 40 rows 1 name description label "Description:"
+            qf_textarea value $description_unquoted cols 40 rows 1 name description label "Page Description:"
             qf_append html "<br>"
             qf_append html "<p>Comments is a place to share comments with other page editors. It isn't published.</p>"
             set page_comments_unquoted [ad_unquotehtml $page_comments]
@@ -1248,7 +1249,7 @@ switch -exact -- $mode {
                 if { $gallery_folder_id ne "" } {
                     set gallery_package_id 1718
                     set album_id $gallery_folder_id
-                    set album_id 2452
+#                    set album_id 2452
                     if { $photo_id eq "" } {
                         set nav_album_photo_list [pa_all_photos_in_album $album_id]
                         set photo_id [lindex $nav_album_photo_list 0]
@@ -1273,113 +1274,118 @@ switch -exact -- $mode {
 # product customization form
                 set currency_code "USD"
                 set weight_unit "lbs"
-                set paypal_business_ref ""
-                set thankyou_url "/paypal-thank-you"
+                set paypal_business_ref "SEQ8ESMLZP7UG"
+                set thankyou_url "http://birdswelcome.com/paypal-thank-you"
                 set sku $model_ref
                 set sku_name $title
-
-                qf_form action $post_url method post id 20130808
-                qf_input type hidden value v name mode
-                qf_input type hidden value v name next_mode
-                qf_input type hidden value $page_template_id name page_template_id
-### if spec1ref ne "" , qf_append spec1html..
-                
-                set spec1val_list [qwcl_spectype_widget 1 $spec1ref $spec1type $spec1default [ad_unquotehtml $spec1value]]
-                if { [llength $spec1val_list] > 0 } {
-                    if { $spec1value eq "" } {
-                        set spec1value $spec1default
+                if { $spec1ref ne "" } {
+                    qf_form action $post_url method post id 20130808
+                    qf_input type hidden value v name mode
+                    qf_input type hidden value v name next_mode
+                    qf_input type hidden value $page_template_id name page_template_id
+                    ### if spec1ref ne "" , qf_append spec1html..
+                    
+                    set spec1val_list [qwcl_spectype_widget 1 $spec1ref $spec1type $spec1default [ad_unquotehtml $spec1value]]
+                    if { [llength $spec1val_list] > 0 } {
+                        if { $spec1value eq "" } {
+                            set spec1value $spec1default
+                        }
+                        regsub { } $spec1value {,} spec1skuval
+                        append sku "-$spec1skuval"
+                        append sku_name ", $spec1ref $spec1value"
+                        qf_append html "<p>$spec1ref: "
+                        if { [string range $spec1type 0 6] eq "selectn" } {
+                            qf_choices type checkbox name spec1value value $spec1val_list class input
+                        } else {
+                            qf_choice type select name spec1value value $spec1val_list class input
+                        }
+                        qf_append html "</p>"
                     }
-                    regsub { } $spec1value {,} spec1skuval
-                    append sku "-$spec1skuval"
-                    append sku_name ", $spec1ref $spec1value"
-                    qf_append html "<p>$spec1ref: "
-                    if { [string range $spec1type 0 6] eq "selectn" } {
-                        qf_choices type checkbox name spec1value value $spec1val_list class input
-                    } else {
-                        qf_choice type select name spec1value value $spec1val_list class input
+                    #                set spec2ref [lindex $page_bw_list 3]
+                    #                set spec2default [lindex $page_bw_list 4]
+                    set spec2val_list [qwcl_spectype_widget 2 $spec2ref $spec2type $spec2default [ad_unquotehtml $spec2value]]
+                    if { [llength $spec2val_list] > 0 } {
+                        if { [string range $spec2type 0 6] eq "" } {
+                            set spec2value $spec2default
+                        }
+                        regsub { } $spec2value {,} spec2skuval
+                        append sku "-$spec2skuval"
+                        append sku_name ", $spec2ref $spec2value"
+                        qf_append html "<p>$spec2ref: "
+                        if { $spec2type eq "selectn" } {
+                            qf_choices type checkbox name spec2value value $spec2val_list class input
+                        } else {
+                            qf_choice type select name spec2value value $spec2val_list class input
+                        }
+                        qf_append html "</p>"
                     }
-                    qf_append html "</p>"
+                    #                set spec3ref [lindex $page_bw_list 5]
+                    #                set spec3default [lindex $page_bw_list 6]
+                    set spec3val_list [qwcl_spectype_widget 3 $spec3ref $spec3type $spec3default [ad_unquotehtml $spec3value]]
+                    if { [llength $spec3val_list] > 0 } {
+                        if { $spec3value eq "" } {
+                            set spec3value $spec3default
+                        }
+                        regsub { } $spec3value {,} spec3skuval
+                        append sku "-$spec3skuval"
+                        append sku_name ", $spec3ref $spec3value"
+                        qf_append html "<p>$spec3ref: "
+                        if { [string range $spec3type 0 6] eq "selectn" } {
+                            qf_choices type checkbox name spec3value value $spec3val_list class input
+                        } else {
+                            qf_choice type select name spec3value value $spec3val_list class input
+                        }
+                        qf_append html "</p>"
+                    }
+                    
+                    set spec4val_list [qwcl_spectype_widget 4 $spec4ref $spec4type $spec4default [ad_unquotehtml $spec4value]]
+                    if { [llength $spec4val_list] > 0 } {
+                        if { $spec4value eq "" } {
+                            set spec4value $spec4default
+                        }
+                        regsub { } $spec4value {,} spec4skuval
+                        append sku "-$spec4skuval"
+                        append sku_name ", $spec4ref $spec4value"
+                        qf_append html "<p>$spec4ref: "
+                        if { [string range $spec4type 0 6] eq "selectn" } {
+                            qf_choices type select checkbox spec4value value $spec4val_list class input
+                        } else {
+                            qf_choice type select name spec4value value $spec4val_list class input
+                        }
+                        qf_append html "</p>"
+                    }
+                    
+                    set spec5val_list [qwcl_spectype_widget 5 $spec5ref $spec5type $spec5default [ad_unquotehtml $spec5value]]
+                    if { [llength $spec5val_list] > 0 } {
+                        if { $spec5value eq "" } {
+                            set spec5value $spec5default
+                        }
+                        regsub { } $spec5value {,} spec5skuval
+                        append sku "-$spec5skuval"
+                        append sku_name ", $spec5ref $spec5value"
+                        qf_append html "<p>$spec5ref: "
+                        if {  [string range $spec5type 0 6] eq "selectn" } {
+                            qf_choices type checkbox name spec5value value $spec5val_list class input
+                        } else {
+                            qf_choice type select name spec5value value $spec5val_list class input
+                        }
+                        qf_append html "</p>"
+                    }
+                    
+                    qf_input type image value "Submit" src "http://birdswelcome.com/resources/update-button.png" alt "Click UPDATE to refresh the page with your choice(s)"
+                    #qf_input type submit value "Save"
+                    qf_append html " &nbsp; &nbsp; &nbsp; ${cancel_link_html} <br>"
+                    qf_close
+                    set form_html [qf_read]
+                } else {
+                    set form_html ""
                 }
-#                set spec2ref [lindex $page_bw_list 3]
-#                set spec2default [lindex $page_bw_list 4]
-                set spec2val_list [qwcl_spectype_widget 2 $spec2ref $spec2type $spec2default [ad_unquotehtml $spec2value]]
-                if { [llength $spec2val_list] > 0 } {
-                    if { [string range $spec2type 0 6] eq "" } {
-                        set spec2value $spec2default
-                    }
-                    regsub { } $spec2value {,} spec2skuval
-                    append sku "-$spec2skuval"
-                    append sku_name ", $spec2ref $spec2value"
-                    qf_append html "<p>$spec2ref: "
-                    if { $spec2type eq "selectn" } {
-                        qf_choices type checkbox name spec2value value $spec2val_list class input
-                    } else {
-                        qf_choice type select name spec2value value $spec2val_list class input
-                    }
-                    qf_append html "</p>"
-                }
-#                set spec3ref [lindex $page_bw_list 5]
-#                set spec3default [lindex $page_bw_list 6]
-                set spec3val_list [qwcl_spectype_widget 3 $spec3ref $spec3type $spec3default [ad_unquotehtml $spec3value]]
-                if { [llength $spec3val_list] > 0 } {
-                    if { $spec3value eq "" } {
-                        set spec3value $spec3default
-                    }
-                    regsub { } $spec3value {,} spec3skuval
-                    append sku "-$spec3skuval"
-                    append sku_name ", $spec3ref $spec3value"
-                    qf_append html "<p>$spec3ref: "
-                    if { [string range $spec3type 0 6] eq "selectn" } {
-                        qf_choices type checkbox name spec3value value $spec3val_list class input
-                    } else {
-                        qf_choice type select name spec3value value $spec3val_list class input
-                    }
-                    qf_append html "</p>"
-                }
-
-                set spec4val_list [qwcl_spectype_widget 4 $spec4ref $spec4type $spec4default [ad_unquotehtml $spec4value]]
-                if { [llength $spec4val_list] > 0 } {
-                    if { $spec4value eq "" } {
-                        set spec4value $spec4default
-                    }
-                    regsub { } $spec4value {,} spec4skuval
-                    append sku "-$spec4skuval"
-                    append sku_name ", $spec4ref $spec4value"
-                    qf_append html "<p>$spec4ref: "
-                    if { [string range $spec4type 0 6] eq "selectn" } {
-                        qf_choices type select checkbox spec4value value $spec4val_list class input
-                    } else {
-                        qf_choice type select name spec4value value $spec4val_list class input
-                    }
-                    qf_append html "</p>"
-                }
-
-                set spec5val_list [qwcl_spectype_widget 5 $spec5ref $spec5type $spec5default [ad_unquotehtml $spec5value]]
-                if { [llength $spec5val_list] > 0 } {
-                    if { $spec5value eq "" } {
-                        set spec5value $spec5default
-                    }
-                    regsub { } $spec5value {,} spec5skuval
-                    append sku "-$spec5skuval"
-                    append sku_name ", $spec5ref $spec5value"
-                    qf_append html "<p>$spec5ref: "
-                    if {  [string range $spec5type 0 6] eq "selectn" } {
-                        qf_choices type checkbox name spec5value value $spec5val_list class input
-                    } else {
-                        qf_choice type select name spec5value value $spec5val_list class input
-                    }
-                    qf_append html "</p>"
-                }
-
-                qf_input type image value "Submit" src "http://birdswelcome.com/resources/update-button.png" alt "Click UPDATE to refresh the page with your choice(s)"
-                #qf_input type submit value "Save"
-                qf_append html " &nbsp; &nbsp; &nbsp; ${cancel_link_html} <br>"
-                qf_close
-                set form_html [qf_read]
                 append form_html "<p>Product: <br>&nbsp;${sku_name}</p>"
                 append form_html "<p>sku#: <br>&nbsp;$sku</p>"
-
-                append form_html [ecbw_paypal_checkout_button $sku $sku_name [format %6.2f $price] 0 $ship_wt $paypal_business_ref $thankyou_url]
+                set price_pretty [format %6.2f $price]
+                append form_html "<p>price: $ ${price_pretty}</p>"
+                append form_html "<p>weight: ${actual_wt}</p>"
+                append form_html [ecbw_paypal_checkout_button $sku $sku_name $price_pretty 0 $ship_wt $paypal_business_ref $thankyou_url]
 #                set image_name [lindex $page_bw_list 7]
 #                set image_width [lindex $page_bw_list 8]
 #                set image_height [lindex $page_bw_list 9]
