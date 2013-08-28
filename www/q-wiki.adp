@@ -1,8 +1,16 @@
+<if @master@ not nil>
+<if @master@ ne "0">
 <master>
   <property name="doc(title)">@title@</property>
   <property name="title">@title@</property>
   <property name="context">@context;noquote@</property>
-
+</if>
+</if><else>
+<master>
+  <property name="doc(title)">@title@</property>
+  <property name="title">@title@</property>
+  <property name="context">@context;noquote@</property>
+</else>
 
 <if @menu_html@ not nil>
   <div class="action-list" style="float: right; border: 1px dotted;">@menu_html;noquote@</div>

@@ -1,4 +1,4 @@
-# q-wiki/www/q-wiki-extended.tcl
+# cl-custom/www/q-wiki.tcl
 # part of the cl-custom package based on Q-Wiki package 
 # depends on OpenACS website toolkit at OpenACS.org
 # copyrigh 2013
@@ -18,7 +18,7 @@
 # flags are blank -- an unused db column / page attribute for extending the app for use cases
 # url has to be a given (not validated), since this page may be fed $url via an index.vuh
 
-set title "Q-Wiki"
+set title "cl-custom"
 set icons_path1 "/resources/acs-subsite/"
 set icons_path2 "/resources/ajaxhelper/icons/"
 set delete_icon_url [file join $icons_path2 delete.png]
@@ -35,7 +35,7 @@ set create_p [permission::permission_p -party_id $user_id -object_id $package_id
 set write_p [permission::permission_p -party_id $user_id -object_id $package_id -privilege write]
 set admin_p [permission::permission_p -party_id $user_id -object_id $package_id -privilege admin]
 set delete_p [permission::permission_p -party_id $user_id -object_id $package_id -privilege delete]
-
+ns_log Notice "cl-custom/q-wiki.tcl: package_id $package_id user_id $user_id read_p $read_p create_p $create_p write_p $write_p admin_p $admin_p delete_p $delete_p"
 array set input_array [list \
                            url ""\
                            page_id ""\
@@ -81,6 +81,7 @@ array set input_array [list \
                            ship_wt "" \
                            actual_wt "" \
                            unit "" \
+                           master "" \
                           ]
 
 set user_message_list [list ]
@@ -96,6 +97,16 @@ if { $form_posted && ( $input_array2(mode) eq "w" || $input_array2(mode) eq "d" 
 } else {
     array set input_array [array get input_array2]
 }
+
+# these ifs handle cases where q-wiki is included in another acs-templated page
+if { ![info exists master] } {
+    set master $input_array(master)
+} 
+if { [info exists mode] && $input_array(mode) eq "" } {
+    set input_array(mode) $mode
+    set input_array(page_name) "index"
+}
+
 set page_id $input_array(page_id)
 set page_template_id $input_array(page_template_id)
 
@@ -697,7 +708,9 @@ switch -exact -- $mode {
             }
 
             ns_log Notice "q-wiki.tcl(427): mode = $mode ie. list of pages, index"
-            lappend menu_list [list edit "${url}?mode=e" ]
+            if { $write_p } {
+                lappend menu_list [list edit "${url}?mode=e" ]
+            }
 
             append title " index" 
             # show page
@@ -717,7 +730,8 @@ switch -exact -- $mode {
                 # new: page_id, name, title, comments, keywords, description, template_id, flags, trashed, popularity, time last_modified, time created, user_id, url
                 lappend pages_stats_lists $stats_mod_list
             }
-            set pages_stats_lists [lsort -index 2 $pages_stats_lists]
+            # new: page_id, name, title, comments, keywords, description, template_id, flags, trashed, popularity, time last_modified, time created, user_id, url
+            set pages_stats_lists [lsort -index 1 $pages_stats_lists]
             # build tables (list_of_lists) stats_list and their html filtered versions page_*_lists for display
             set page_scratch_lists [list]
             set page_stats_lists [list ]
@@ -726,8 +740,11 @@ switch -exact -- $mode {
             foreach stats_mod_list $pages_stats_lists {
                 set stats_list [lrange $stats_mod_list 0 2]
                 lappend stats_list [lindex $stats_mod_list 5]
-                lappend stats_list [lindex $stats_mod_list 3]
-
+                if { $write_p } {
+                    lappend stats_list [lindex $stats_mod_list 3]
+                } else {
+                    lappend status_list ""
+                }
                 set page_id [lindex $stats_mod_list 0]
                 set name [lindex $stats_mod_list 1]
                 set template_id [lindex $stats_mod_list 6]
@@ -776,14 +793,22 @@ switch -exact -- $mode {
 
             # convert table (list_of_lists) to html table
             set page_stats_sorted_lists $page_stats_lists
-            set page_stats_sorted_lists [linsert $page_stats_sorted_lists 0 [list Name "&nbsp;" Title Description Comments] ]
+            if { $write_p } {
+                set page_stats_sorted_lists [linsert $page_stats_sorted_lists 0 [list Name "&nbsp;" Title Description Comments] ]
+            } else {
+                set page_stats_sorted_lists [linsert $page_stats_sorted_lists 0 [list Name "&nbsp;" Title Description ""] ]
+            }
             set page_tag_atts_list [list border 0 cellspacing 0 cellpadding 3]
             set cell_formating_list [list ]
             set page_stats_html [qss_list_of_lists_to_html_table $page_stats_sorted_lists $page_tag_atts_list $cell_formating_list]
             # trashed table
             if { [llength $page_trashed_lists] > 0 } {
                 set page_trashed_sorted_lists $page_trashed_lists
-                set page_trashed_sorted_lists [linsert $page_trashed_sorted_lists 0 [list Name "&nbsp;" Title Description Comments] ]
+                if { $write_p } {
+                    set page_trashed_sorted_lists [linsert $page_trashed_sorted_lists 0 [list Name "&nbsp;" Title Description Comments] ]
+                } else {
+                    set page_trashed_sorted_lists [linsert $page_trashed_sorted_lists 0 [list Name "&nbsp;" Title Description ""] ]
+                }
                 set page_tag_atts_list [list border 0 cellspacing 0 cellpadding 3]
                 
                 set page_trashed_html [qss_list_of_lists_to_html_table $page_trashed_sorted_lists $page_tag_atts_list $cell_formating_list]
@@ -1042,7 +1067,7 @@ switch -exact -- $mode {
             qf_input type text value $spec3ref_unquoted name spec3ref label "Spec3 ref:" size 40 maxlength 80
             qf_append html "<br>"
             set spec3type_unquoted [ad_unquotehtml $spec3type]
-            qf_input type text value $spec3type_unquoted name spec3type label "Spec3 ref:" size 40 maxlength 80
+            qf_input type text value $spec3type_unquoted name spec3type label "Spec3 type:" size 40 maxlength 80
             qf_append html "<br>"
             set spec3default_unquoted [ad_unquotehtml $spec3default]
             qf_input type text value $spec3default_unquoted name spec3default label "Spec3 default value:" size 40 maxlength 80
@@ -1278,6 +1303,8 @@ switch -exact -- $mode {
                 set thankyou_url "http://birdswelcome.com/paypal-thank-you"
                 set sku $model_ref
                 set sku_name $title
+                set form_html ""
+
                 if { $spec1ref ne "" } {
                     qf_form action $post_url method post id 20130808
                     qf_input type hidden value v name mode
@@ -1376,16 +1403,18 @@ switch -exact -- $mode {
                     #qf_input type submit value "Save"
                     qf_append html " &nbsp; &nbsp; &nbsp; ${cancel_link_html} <br>"
                     qf_close
-                    set form_html [qf_read]
-                } else {
-                    set form_html ""
+                    append form_html [qf_read]
+                } 
+
+                if { $price ne "" && $price > 0 } {
+                    append form_html "<p>Product: <br>&nbsp;${sku_name}</p>"
+                    append form_html "<p>sku#: <br>&nbsp;$sku</p>"
+                    set price_pretty [format %6.2f $price]
+                    append form_html "<p>price: $ ${price_pretty}</p>"
+                    append form_html "<p>dimensions: <br>&nbsp;$dimensions"
+                    append form_html "<br>weight: ${actual_wt}</p>"
+                    append form_html [ecbw_paypal_checkout_button $sku $sku_name $price_pretty 0 $ship_wt $paypal_business_ref $thankyou_url]
                 }
-                append form_html "<p>Product: <br>&nbsp;${sku_name}</p>"
-                append form_html "<p>sku#: <br>&nbsp;$sku</p>"
-                set price_pretty [format %6.2f $price]
-                append form_html "<p>price: $ ${price_pretty}</p>"
-                append form_html "<p>weight: ${actual_wt}</p>"
-                append form_html [ecbw_paypal_checkout_button $sku $sku_name $price_pretty 0 $ship_wt $paypal_business_ref $thankyou_url]
 #                set image_name [lindex $page_bw_list 7]
 #                set image_width [lindex $page_bw_list 8]
 #                set image_height [lindex $page_bw_list 9]
