@@ -1332,7 +1332,7 @@ switch -exact -- $mode {
                     #                set spec2default [lindex $page_bw_list 4]
                     set spec2val_list [qwcl_spectype_widget 2 $spec2ref $spec2type $spec2default [ad_unquotehtml $spec2value]]
                     if { [llength $spec2val_list] > 0 } {
-                        if { [string range $spec2type 0 6] eq "" } {
+                        if { $spec2value eq "" } {
                             set spec2value $spec2default
                         }
                         regsub { } $spec2value {,} spec2skuval
