@@ -9,17 +9,17 @@
     <implements-subsite-p>f</implements-subsite-p>
     <inherit-templates-p>f</inherit-templates-p>
     
-    <version name="1.0" url="http://openacs.org/repository/download/apm/cl-custom-1.0.apm">
+    <version name="0.008" url="http://openacs.org/repository/download/apm/cl-custom-0.008.apm">
         <owner url="mailto:tekbasse@yahoo.com">Benjamin Brink</owner>
         <summary>implements custom procs for a wiki based ecommerce boutique website.</summary>
         <description format="text/plain">This is a custom wiki for managing custom products of up to 5 different items. It is an extension of the q-wiki package. cl-custom is sponsored by CraftsmanLarry.com.</description>
         <maturity>0</maturity>
 
-        <provides url="cl-custom" version="1.0"/>
+        <provides url="cl-custom" version="0.008"/>
 
-        <requires url="q-wiki" version="5.90c"/>
-        <requires url="q-forms" version="0.1d"/>
-        <requires url="spreadsheet" version="0.1d"/>
+        <requires url="q-wiki" version="0.001"/>
+        <requires url="q-forms" version="0.001"/>
+        <requires url="spreadsheet" version="0.001"/>
         <requires url="ajaxhelper" version="0.87d"/>
 
         <callbacks>
