@@ -13,7 +13,10 @@ CL-Custom is an extension of Q-Wiki, an OpenACS wiki using a templating system.
 It allows tcl procedures to be used in a web-based publishing environment.
 It is not tied to vertical web applications, such as OpenACS ecommerce package.
 
-This packagte is for managing custom products of up to 5 different specifications per product. Development of cl-custom is sponsored by CraftsmanLarry.com.
+This package is for managing custom products of up to 5 different specifications per product. 
+Specifications can be unique to each product.
+
+Development of cl-custom was sponsored by CraftsmanLarry.com in 2012-3.
 
 license
 -------
@@ -26,7 +29,7 @@ A local copy is available at cl-custom/www/doc/LICENSE.html
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
+    the Free Software Foundation, either version 2 of the License, or
     (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
@@ -64,8 +67,4 @@ This app is ready for web-based publishing SEO optimization.
 Besides content, pages include comments, keywords, page description fields,
 and 5 sets of fields for configuring up to 5 different product-based choices,
 where each product can have completely different sets of choices.
-
-
-
-
 

@@ -1,7 +1,8 @@
 ad_library {
 
-    Paypal procs for BirdsWelcome
-
+    Example procs to be customized for any application
+    License: gnu gpl v2. See package README.md file
+    Some parts associated with paypal basket integration may be copyright PayPal
    @creation-date  March 2011
 }
 

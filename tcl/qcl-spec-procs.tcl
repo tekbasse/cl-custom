@@ -1,6 +1,7 @@
 ad_library {
 
     API for presenting choices with qcl-wiki
+    License: gnu gpl v2. See package README.md file
     @creation-date 1 Aug 2013
     @cs-id $Id:
 }

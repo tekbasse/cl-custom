@@ -1,6 +1,7 @@
 ad_library {
 
     API for integrating bw with q-wiki
+    License: gnu gpl v2. See package README.md file
     @creation-date 17 Jul 2012
     @cs-id $Id:
 }
