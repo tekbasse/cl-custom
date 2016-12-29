@@ -43,6 +43,8 @@ A local copy is available at cl-custom/www/doc/LICENSE.html
 features
 --------
 
+Each product can be linked to a gallery of images in the photo-album package.
+
 Pages automatically have revisioning.
 
 Pages must be trashed before being deleted. Trashed pages can be untrashed. 
