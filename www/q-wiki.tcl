@@ -1049,7 +1049,7 @@ switch -exact -- $mode {
             set spec1type_unquoted [ad_unquotehtml $spec1type]
             qf_input type text value $spec1type_unquoted name spec1type label "Spec1 type:" size 40 maxlength 80
             qf_append html "<br>"
-            qf_append html "<p>'spec# default value' is the choice made for the customer before they choose. It's the default, unless they choose another option. For colors, choose one of the available SW paint references, such as 'SW6992'</p>"
+            qf_append html "<p>'spec# default value' is the choice made for the customer before they choose. It's the default, unless they choose another option. For colors, choose one of the available color references, such as 'RED'</p>"
             set spec1default_unquoted [ad_unquotehtml $spec1default]
             qf_input type text value $spec1default_unquoted name spec1default label "Spec1 default value:" size 40 maxlength 80
             qf_append html "<br>"
@@ -1091,10 +1091,9 @@ switch -exact -- $mode {
             qf_input type text value $spec5default_unquoted name spec5default label "Spec5 default value:" size 40 maxlength 80
             qf_append html "<br>"
 
-#### make gallery_folder_id a qf_choice and reference this list of albums from the main folder?
-
-            if { 1 } {
-                set root_folder_id 1738
+            set gallery_package_id [parameter::get -parameter photoAlbumPkgId -package_id $package_id]
+            if { $gallery_package_id ne "" } {
+                set root_folder_id [parameter::get -parameter rootFolderId -package_id $package_id]
                 # query can accept these without changes: item_id,name,description,type,ordering_key,iconic,width,height
                 set albums_list_of_lists [db_list_of_lists albums_get { select item_id,name,description,type,ordering_key,iconic,width,height
                     from ( select i.item_id,
@@ -1271,8 +1270,7 @@ switch -exact -- $mode {
                 # page_contents_filtered
                 set page_contents_unquoted [ad_unquotehtml $page_contents]
 
-                if { $gallery_folder_id ne "" } {
-                    set gallery_package_id 1718
+                if { $gallery_folder_id ne "" && $gallery_package_id ne "" } {
                     set album_id $gallery_folder_id
 #                    set album_id 2452
                     if { $photo_id eq "" } {
@@ -1299,8 +1297,12 @@ switch -exact -- $mode {
 # product customization form
                 set currency_code "USD"
                 set weight_unit "lbs"
-                set paypal_business_ref "SEQ8ESMLZP7UG"
-                set thankyou_url "http://birdswelcome.com/paypal-thank-you"
+                set paypal_business_ref "Your-paypal-biz-ref-here"
+                set thankyou_url [ad_url]
+                if { [string range $thankyou_url end end] ne "/" } {
+                    append thankyou_url "/"
+                }
+                append thankyou_url "paypal-thank-you"
                 set sku $model_ref
                 set sku_name $title
                 set form_html ""
