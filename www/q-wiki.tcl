@@ -1091,9 +1091,9 @@ switch -exact -- $mode {
             qf_input type text value $spec5default_unquoted name spec5default label "Spec5 default value:" size 40 maxlength 80
             qf_append html "<br>"
 
-            set gallery_package_id [parameter::get -parameter photoAlbumPkgId -package_id $package_id]
+            set gallery_package_id [parameter::get -parameter PhotoAlbumPkgId -package_id $package_id]
             if { $gallery_package_id ne "" } {
-                set root_folder_id [parameter::get -parameter rootFolderId -package_id $package_id]
+                set root_folder_id [parameter::get -parameter RootFolderId -package_id $package_id]
                 # query can accept these without changes: item_id,name,description,type,ordering_key,iconic,width,height
                 set albums_list_of_lists [db_list_of_lists albums_get { select item_id,name,description,type,ordering_key,iconic,width,height
                     from ( select i.item_id,
