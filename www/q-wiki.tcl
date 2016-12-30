@@ -1147,8 +1147,8 @@ switch -exact -- $mode {
 
             } else {
                 qf_append html "d<p>Reference the gallery album_id associated with the product, or leave blank:</p>"
-                set gallery_folder_id_unquoted \[ad_unquotehtml $gallery_folder_id\]
-                qf_input type text value $gallery_folder_id_unquoted name gallery_folder_id label "Gallery album_id:" size 40 maxlength 80
+                #set gallery_folder_id_unquoted \[ad_unquotehtml $gallery_folder_id\]
+                qf_input type text value $gallery_folder_id name gallery_folder_id label "Gallery album_id:" size 40 maxlength 80
             }
             
             qf_append html "<br>"
@@ -1401,7 +1401,7 @@ switch -exact -- $mode {
                         qf_append html "</p>"
                     }
                     
-                    qf_input type image value "Submit" src "http://birdswelcome.com/resources/update-button.png" alt "Click UPDATE to refresh the page with your choice(s)"
+                    qf_input type image value "Submit" src "resources/update-button.png" alt "Click UPDATE to refresh the page with your choice(s)"
                     #qf_input type submit value "Save"
                     qf_append html " &nbsp; &nbsp; &nbsp; ${cancel_link_html} <br>"
                     qf_close

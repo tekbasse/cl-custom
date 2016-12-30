@@ -5,6 +5,10 @@
 # index.vuh allows q-wiki to integrate with other services.
 # For robustness, rename q-wiki.tcl/q-wiki.adp to index.vuh to bypass having to repost data
 set conn_path_url [ad_conn path_info]
+if { [string match -nocase {*[gjp][inp][fg]} $conn_path_url ] } {
+    rp_internal_redirect /packages/cl-custom/www/${conn_path_url}
+    ad_script_abort
+}
 
 array set input_array [list \
                            url ""\
